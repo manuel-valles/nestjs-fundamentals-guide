@@ -49,3 +49,12 @@ _NOTE_: Decorators (@Module, @Controller,...) are functions that apply logic. Th
   - The `@Injectable()` decorator attaches metadata, which declares that CatsService is a class that can be managed by the Nest IoC container.
   - The CoffeesService is injected through the **class constructor**. Notice the use of the private syntax. This shorthand allows us to both declare and initialize the coffeesService member immediately in the same location.
   - Nest is built around the strong design pattern commonly known as **Dependency injection**. In Nest, thanks to TypeScript capabilities, it's extremely easy to manage dependencies because they are resolved just by type. Nest will resolve the _coffeesService_ by creating and returning an instance of _CoffeesService_ (or, in the normal case of a singleton, returning the existing instance if it has already been requested elsewhere). This dependency is resolved and passed to your controller's constructor (or assigned to the indicated property).
+
+    #### 2.2.1. Handling errors:
+
+    - Nest provides a built-in **HttpException** class and a set of standard exceptions that inherit from the base HttpException, like **NotFoundException**:
+      ```ts
+      throw new HttpException(`Coffee #${id} not found`, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`Coffee #${id} not found`);
+      ```
+    - [Further information about Exception filters](https://docs.nestjs.com/exception-filters)
