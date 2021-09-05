@@ -58,3 +58,14 @@ _NOTE_: Decorators (@Module, @Controller,...) are functions that apply logic. Th
       throw new NotFoundException(`Coffee #${id} not found`);
       ```
     - [Further information about Exception filters](https://docs.nestjs.com/exception-filters)
+
+  ### 2.3. Creating a Basic Module ([Full Modules documentation](https://docs.nestjs.com/modules)):
+
+  - A module is a class annotated with a `@Module()` decorator. The @Module() decorator provides metadata that Nest makes use of to organize the application structure. It takes a single object whose properties describe the module:
+    - The **providers** that will be instantiated by the Nest injector and that may be shared at least across this module;
+    - The set of **controllers** defined in this module which have to be instantiated;
+    - The list of imported modules or **imports** that export the providers which are required in this module;
+    - Thw subset of providers or **exports** that are provided by this module and should be available in other modules which import this module.
+  - Each application has at least one module, a **root module**. The root module is the starting point Nest uses to build the application graph (the internal data structure Nest uses to resolve module and provider relationships and dependencies).
+  - Modules are strongly recommended as an effective way to organize your components. Thus, for most applications, the resulting architecture will employ multiple modules, each encapsulating a closely related set of capabilities.
+  - To create a module using the CLI, simply execute the command `$ nest g module coffees`.
