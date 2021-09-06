@@ -4,11 +4,11 @@ A guide from the [Official NestJS Fundamentals](https://courses.nestjs.com/).
 
 ## 1. Installation
 
-- `npm i -g @nestjs/cli`
-- `nest --version` (current version **7.5.1**)
-- `nest new`: Provide a name for your app and the package manager of your choice, e.g. `coffee app` and `yarn`
-- `cd coffee-app`
-- `yarn start`
+- `$ npm i -g @nestjs/cli`
+- `$ nest --version` (current version **7.5.1**)
+- `$ nest new`: Provide a name for your app and the package manager of your choice, e.g. `coffee app` and `yarn`
+- `$ cd coffee-app`
+- `$ yarn start`
 
 _NOTE_: Decorators (@Module, @Controller,...) are functions that apply logic. They can be applied to classes, methods, properties and parameters.
 
@@ -20,10 +20,10 @@ _NOTE_: Decorators (@Module, @Controller,...) are functions that apply logic. Th
 
   - Controllers are one of the most important building blocks in NestJS application as they handle requests.
   - Create a controller with the CLI:
-    - `nest generate controller` or `nest g co`: provide the name of it, e.g. 'coffees'.
+    - `$ nest generate controller` or `$ nest g co`: provide the name of it, e.g. 'coffees'.
     - Some flags:
-      - `nest g co --no-spec`: without the test file;
-      - `nest g co modules/abc --dry-run`: to try a command, e.g. where it would be allocated.
+      - `$ nest g co --no-spec`: without the test file;
+      - `$ nest g co modules/abc --dry-run`: to try a command, e.g. where it would be allocated.
   - In order to create a basic controller, we use classes and decorators. Decorators associate classes with required metadata and enable Nest to create a routing map (tie requests to the corresponding controllers).
   - Nest provides decorators for all of the standard HTTP methods: `@Get()`, `@Post()`, `@Put()`, `@Delete()`, `@Patch()`, `@Options()`, and `@Head()`. In addition, `@All()` defines an endpoint that handles all of them.
   - The route path for a handler is determined by concatenating the (optional) _prefix_ declared for the controller, and any _path_ specified in the method's decorator. Using a path prefix in a @Controller() decorator allows us to easily group a set of related routes, and minimize repetitive code. For example, a path prefix of 'coffees' combined with the decorator @Get(`flavours`) would produce a route mapping for requests like GET `/coffees/flavours`.
@@ -45,7 +45,7 @@ _NOTE_: Decorators (@Module, @Controller,...) are functions that apply logic. Th
 
   - Many of the basic Nest classes may be treated as a **provider** – _services, repositories, factories, helpers_, and so on. The main idea of a provider is that it can be injected as dependency; this means objects can create various relationships with each other.
   - Controllers should handle HTTP requests and delegate more complex tasks to providers. Providers are plain JavaScript classes that are declared as providers in a module.
-  - To create a service using the CLI, simply execute the command `$ nest g service coffees` or `nest g s`.
+  - To create a service using the CLI, simply execute the command `$ nest g service coffees` or `$ nest g s`.
   - The `@Injectable()` decorator attaches metadata, which declares that CatsService is a class that can be managed by the Nest IoC container.
   - The CoffeesService is injected through the **class constructor**. Notice the use of the private syntax. This shorthand allows us to both declare and initialize the coffeesService member immediately in the same location.
   - Nest is built around the strong design pattern commonly known as **Dependency injection**. In Nest, thanks to TypeScript capabilities, it's extremely easy to manage dependencies because they are resolved just by type. Nest will resolve the _coffeesService_ by creating and returning an instance of _CoffeesService_ (or, in the normal case of a singleton, returning the existing instance if it has already been requested elsewhere). This dependency is resolved and passed to your controller's constructor (or assigned to the indicated property).
@@ -69,3 +69,22 @@ _NOTE_: Decorators (@Module, @Controller,...) are functions that apply logic. Th
   - Each application has at least one module, a **root module**. The root module is the starting point Nest uses to build the application graph (the internal data structure Nest uses to resolve module and provider relationships and dependencies).
   - Modules are strongly recommended as an effective way to organize your components. Thus, for most applications, the resulting architecture will employ multiple modules, each encapsulating a closely related set of capabilities.
   - To create a module using the CLI, simply execute the command `$ nest g module coffees`.
+
+  ### 2.4. Data Transfer Objects
+
+  - A DTO (Data Transfer Object) is an object that defines how the data will be sent over the network. We could determine the DTO schema by using TypeScript interfaces, or by simple classes. Interestingly, it is recommended using classes since they are part of the JavaScript ES6 standard, and therefore they are preserved as real entities in the compiled JavaScript. On the other hand, since TypeScript interfaces are removed during the transpilation, Nest can't refer to them at runtime. This is important because features such as Pipes enable additional possibilities when they have access to the metatype of the variable at runtime.
+  - To create a DTO using the CLI, simply execute the command `$ nest g class coffees/dto/create-coffee.dto --no-spec`. Creating this file within a dedicated `/dto` directory in 'coffees' folder is a great application convention to
+    get into not only for other DTO's but also for similarly group, such as interfaces and entities. All grouped within their associated module.
+  - One other great best practice with DTO's is marking all of the properties as `readonly` to help maintain immutability.
+  - `$ yarn add class-validator class-transformer`
+
+    #### 2.4.1. Validating Input Data with DTOs:
+
+    - It's a common best practice for any back end to validate the correctness of data being sent into our applications, and it's even more ideal if we can automatically validate these incoming requests. NestJS provides the **ValidationPipe** to solve this exact problem. The ValidationPipe provides a convenient way of enforcing validation rules for all incoming client payloads.
+    - Implementation:
+      - `@ main.ts`:
+        ```ts
+        app.useGlobalPipes(new ValidationPipe());
+        ```
+      - `$ yarn add class-validator class-transformer`
+    - NestJS provides several utility functions as part of the package `@nestjs/mapped-types`: `$ yarn add @nestjs/mapped-types`. _PartialType_ function is really helpful because not only marks, all the fields is optional (no more duplicate code!), but it also inherits all the validation rules applied via decorators, as well as adds a single additional validation rule to each field the `@IsOptional()` rule on the fly.
