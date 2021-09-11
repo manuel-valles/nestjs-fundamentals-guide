@@ -88,3 +88,13 @@ _NOTE_: Decorators (@Module, @Controller,...) are functions that apply logic. Th
         ```
       - `$ yarn add class-validator class-transformer`
     - NestJS provides several utility functions as part of the package `@nestjs/mapped-types`: `$ yarn add @nestjs/mapped-types`. _PartialType_ function is really helpful because not only marks, all the fields is optional (no more duplicate code!), but it also inherits all the validation rules applied via decorators, as well as adds a single additional validation rule to each field the `@IsOptional()` rule on the fly.
+    - The ValidationPipe has many great features:
+      - _whitelist_: it filters out properties that should NOT be received by a method handler;
+      - _forbidNonWhitelisted_: this property, in combination with whitelist, will STOP a request from being processed if any non-white listed properties are present. Throwing an error instead.
+      - _transform_: since the request payloads typically come over the network as plain JS objects, this feature ensures that the payloads come in the shape we expect. It not only saves us time, but also helps us be more aware of what types we're dealing with, whether they are primitive, like Boolean, Number or even our custom DTOs. However, be aware that this feature may very slightly impact performance.
+      ```ts
+        new ValidationPipe({
+          whitelist: true,
+          forbidNonWhitelisted: true,
+        }),
+      ```
