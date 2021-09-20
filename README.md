@@ -127,3 +127,4 @@ _NOTE_: Decorators (@Module, @Controller,...) are functions that apply logic. Th
     - `@Column()` decorator admits two arguments, first for the type of column and the second one for options.
   
     ![entityCoffee](./resources/coffee_entity.png)
+  - TypeORM supports the **Repository** pattern what means that each Entity we create hast its own repository. The Repository class available from TypeORM acts as an abstraction over our data source and exposes a variety of useful methods to interact with the records stored in our database. Once, you have registered Coffee Entity in the scope of the CoffeesModule, you have the availability to inject the automatically generated 'Repository'.
