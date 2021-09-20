@@ -112,9 +112,18 @@ _NOTE_: Decorators (@Module, @Controller,...) are functions that apply logic. Th
   - Nest itself is database agnostic, allowing you to easily integrate with any SQL or NoSQL database of your choice. There are a lot of different ways you can integrate Nest with DBs, and they all depend on your personal preferences or project's needs.
   - **TypeORM** is a popular, mature and fully featured Object Relational Mapper (ORM). It lets interact with entities in DBs in a Type safe and incredibly simple manner, allowing to get things done faster than ever. This time we will set up TypeORM with the Postgres database that we have up and running in our Docker container. However, TypeORM provides support for many other relational databases such as MySQL, Microsoft, SQLite and even NoSQL databases like MongoDB.
     - `$ yarn add @nestjs/typeorm pg`
-    - Add the configuration needed in the `app.module.ts`: - Port and password must match with the `docker-compose.yml` file; - `autoLoadEntities` helps load modules automatically instead of specifying the entities Array; - `synchronize` ensures that our TypeORM entities will be synched with the DB every time we run our application.
+    - Add the configuration needed in the `app.module.ts`: 
+      - Port and password must match with the `docker-compose.yml` file; 
+      - `autoLoadEntities` helps load modules automatically instead of specifying the entities Array; 
+      - `synchronize` ensures that our TypeORM entities will be synched with the DB every time we run our application.
       **IMPORTANT**: Make sure you DISABLE THIS when you are in Production!
       **NOTE**: Nest v8 uses RxJS v7, which no longer has a `toPromise()` method for Observables,but the `lastValueFrom` method instead. If you're receiving this error, you probably need to update your rxjs dependency to >7.
-    - Applications often run in different environments. Depending on the environment, different configuration settings should be used. For example, usually the local environment relies on specific database credentials, valid only for the local DB instance. The production environment would use a separate set of DB credentials. Since configuration variables change, best practice is to store configuration variables in the environment. A good approach for using this technique in Nest is to create a _ConfigModule_ that exposes a ConfigService which loads the appropriate **.env** file. While you may choose to write such a module yourself, for convenience Nest provides the `@nestjs/config` package out-of-the box.
+  - Applications often run in different environments. Depending on the environment, different configuration settings should be used. For example, usually the local environment relies on specific database credentials, valid only for the local DB instance. The production environment would use a separate set of DB credentials. Since configuration variables change, best practice is to store configuration variables in the environment. A good approach for using this technique in Nest is to create a _ConfigModule_ that exposes a ConfigService which loads the appropriate **.env** file. While you may choose to write such a module yourself, for convenience Nest provides the `@nestjs/config` package out-of-the box.
       - `$ npm i --save @nestjs/config`
       - Configure `app.module.ts`. [Further information](https://docs.nestjs.com/techniques/configuration)
+
+  - **Entity** represents a relationship between a TypeScript class and a Database table, and in the case of Nest apps, the entities will be classes decorated with the `@Entity()` decorator. For example, passing the String 'coffees' into the decorator will generate a 'Coffees' table instead.
+    - `@PrimaryGeneratedColumn()` decorator will not only define ID as the primary column, but also auto increment the value for us;
+    - `@Column()` decorator admits two arguments, first for the type of column and the second one for options.
+  
+    ![entityCoffee](./resources/coffee_entity.png)
